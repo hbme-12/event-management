@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Event Management Dashboard</title>
+    <!-- Modern Font: Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Boxicons for modern, light icons -->
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <div class="app-container">
+        <!-- Sidebar / Topbar depending on responsive view -->
+        <header class="app-header">
+            <a class="logo-link" href="index.html" aria-label="Event Management Home">
+                <div class="logo">
+                    <i class='bx bxl-sketch glow-icon'></i>
+                    <h1>Event Management</h1>
+                </div>
+            </a>
+            <div class="header-actions">
+                <button class="btn btn-primary" id="addEventBtn">
+                    <i class='bx bx-plus'></i> New Event
+                </button>
+            </div>
+        </header>
+
+        <main class="main-content">
+            <div class="dashboard-header">
+                <div class="title-section">
+                    <h2>Your Events</h2>
+                    <p class="subtitle">Manage all your upcoming webinars and masterclasses.</p>
+                </div>
+
+                <div class="controls-section">
+                    <div class="search-bar">
+                        <i class='bx bx-search'></i>
+                        <input type="text" id="searchInput" placeholder="Search events..." />
+                    </div>
+                </div>
+            </div>
+
+            <!-- Custom Tab Navigation -->
+            <div class="tabs-container">
+                <div class="tabs">
+                    <button class="tab-btn active" data-tab="upcoming">
+                        <span>Upcoming</span>
+                        <span class="badge badge-upcoming" id="upcomingCount">0</span>
+                    </button>
+                    <button class="tab-btn" data-tab="completed">
+                        <span>Completed</span>
+                        <span class="badge badge-completed" id="completedCount">0</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Events Grid -->
+            <div class="events-grid" id="eventsContainer">
+                <!-- Event cards will be injected here via JS -->
+            </div>
+
+            <!-- Empty State (Hidden by default) -->
+            <div class="empty-state hidden" id="emptyState">
+                <i class='bx bx-folder-open'></i>
+                <h3>No events found</h3>
+                <p>You don't have any events matching this criteria.</p>
+            </div>
+        </main>
+    </div>
+
+    <!-- New Event Modal -->
+    <div class="modal-overlay hidden" id="newEventModal" role="dialog" aria-modal="true"
+        aria-labelledby="newEventTitle">
+        <div class="modal">
+            <div class="modal-header">
+                <h3 id="newEventTitle">Create New Event</h3>
+                <button class="icon-btn" id="closeModalBtn" aria-label="Close">
+                    <i class='bx bx-x'></i>
+                </button>
+            </div>
+
+            <form class="modal-body" id="newEventForm">
+                <div class="form-grid">
+                    <div class="form-field">
+                        <label for="evtTitle">Title</label>
+                        <input id="evtTitle" name="title" type="text" placeholder="Event title" required />
+                    </div>
+
+                    <div class="form-field">
+                        <label for="evtType">Type</label>
+                        <input id="evtType" name="type" type="text" placeholder="Webinar / Workshop / Masterclass"
+                            required />
+                    </div>
+
+                    <div class="form-field form-field-full">
+                        <label for="evtDescription">Description</label>
+                        <textarea id="evtDescription" name="description" rows="3" placeholder="Describe the event"
+                            required></textarea>
+                    </div>
+
+                    <div class="form-field">
+                        <label for="evtDate">Date</label>
+                        <input id="evtDate" name="date" type="date" required />
+                    </div>
+
+                    <div class="form-field">
+                        <label for="evtTime">Time</label>
+                        <input id="evtTime" name="time" type="time" required />
+                    </div>
+
+                    <div class="form-field">
+                        <label for="evtSpeaker">Speaker</label>
+                        <input id="evtSpeaker" name="speaker" type="text" placeholder="Speaker name" required />
+                    </div>
+
+                    <div class="form-field">
+                        <label for="evtStatus">Status</label>
+                        <select id="evtStatus" name="status" required>
+                            <option value="upcoming" selected>Upcoming</option>
+                            <option value="completed">Completed</option>
+                        </select>
+                    </div>
+
+                    <div class="form-field">
+                        <label for="evtAutomationFolder">Automation Folder (IND & UAE)</label>
+                        <input id="evtAutomationFolder" name="automationFolder" type="text"
+                            placeholder="Folder path or link" />
+                    </div>
+
+                    <div class="form-field">
+                        <label for="evtEmailTemplates">Email Templates (IND & UAE)</label>
+                        <input id="evtEmailTemplates" name="emailTemplates" type="text"
+                            placeholder="Folder path or link" />
+                    </div>
+
+                    <div class="form-field">
+                        <label for="evtWhatsappTemplate">WhatsApp Template in GHL (UAE)</label>
+                        <input id="evtWhatsappTemplate" name="whatsappTemplate" type="text"
+                            placeholder="Template path or link" />
+                    </div>
+
+                    <div class="form-field">
+                        <label for="evtSlackChannel">Slack Channel Link (IND & UAE)</label>
+                        <input id="evtSlackChannel" name="slackChannel" type="url" placeholder="https://" />
+                    </div>
+
+                    <div class="form-field form-field-full">
+                        <label for="evtGoogleSheet">Google Sheet Link (IND & UAE)</label>
+                        <input id="evtGoogleSheet" name="googleSheet" type="url" placeholder="https://" />
+                    </div>
+                </div>
+
+                <div class="form-error hidden" id="newEventError" role="alert"></div>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" id="cancelModalBtn">Cancel</button>
+                    <button type="submit" class="btn btn-primary">
+                        <i class='bx bx-plus'></i> Add Event
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script src="main.js"></script>
+</body>
+
+</html>

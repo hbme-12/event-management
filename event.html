@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Event Details • Event Management</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="app-container">
+        <header class="app-header">
+            <a class="logo-link" href="index.html" aria-label="Event Management Home">
+                <div class="logo">
+                    <i class='bx bxl-sketch glow-icon'></i>
+                    <h1>Event Management</h1>
+                </div>
+            </a>
+            <div class="header-actions">
+                <button class="btn btn-primary" id="editEventBtn">
+                    <i class='bx bx-edit-alt'></i> Edit
+                </button>
+                <button class="btn btn-secondary" id="backBtn">
+                    <i class='bx bx-left-arrow-alt'></i> Back
+                </button>
+            </div>
+        </header>
+
+        <main class="main-content">
+            <div class="event-details-header">
+                <div>
+                    <p class="event-details-kicker" id="eventKicker">EVENT</p>
+                    <h2 class="event-details-title" id="eventTitle">Event</h2>
+                    <p class="event-details-subtitle" id="eventSubtitle"></p>
+                </div>
+                <span class="event-status" id="eventStatusPill"></span>
+            </div>
+
+            <section class="event-details-grid">
+                <div class="event-details-card">
+                    <h3>Details</h3>
+                    <p class="event-details-desc" id="eventDescription"></p>
+                </div>
+
+                <div class="event-details-card">
+                    <h3>Schedule</h3>
+                    <div class="card-meta event-details-meta">
+                        <div class="meta-item">
+                            <i class='bx bx-calendar'></i>
+                            <span id="eventDate"></span>
+                        </div>
+                        <div class="meta-item">
+                            <i class='bx bx-time-five'></i>
+                            <span id="eventTime"></span>
+                        </div>
+                        <div class="meta-item">
+                            <i class='bx bx-user'></i>
+                            <span id="eventSpeaker"></span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="event-details-card" id="resourcesCard" style="grid-column: 1 / -1; display: none;">
+                    <h3>Resources & Links</h3>
+                    <div class="card-meta event-details-meta" id="resourcesList" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1rem; border-top: none; padding-top: 0;">
+                    </div>
+                </div>
+            </section>
+
+            <div class="empty-state hidden" id="detailsEmpty">
+                <i class='bx bx-error-circle'></i>
+                <h3>Event not found</h3>
+                <p>We couldn't load this event’s details. Please go back and try again.</p>
+            </div>
+        </main>
+    </div>
+
+    <!-- Edit Event Modal -->
+    <div class="modal-overlay hidden" id="editEventModal" role="dialog" aria-modal="true" aria-labelledby="editEventTitle">
+        <div class="modal">
+            <div class="modal-header">
+                <h3 id="editEventTitle">Edit Event</h3>
+                <button class="icon-btn" id="closeEditModalBtn" aria-label="Close">
+                    <i class='bx bx-x'></i>
+                </button>
+            </div>
+
+            <form class="modal-body" id="editEventForm">
+                <div class="form-grid">
+                    <div class="form-field">
+                        <label for="editTitle">Title</label>
+                        <input id="editTitle" name="title" type="text" placeholder="Event title" required />
+                    </div>
+                    <div class="form-field">
+                        <label for="editType">Type</label>
+                        <input id="editType" name="type" type="text" placeholder="Webinar / Workshop / Masterclass" required />
+                    </div>
+                    <div class="form-field form-field-full">
+                        <label for="editDescription">Description</label>
+                        <textarea id="editDescription" name="description" rows="3" placeholder="Describe the event" required></textarea>
+                    </div>
+                    <div class="form-field">
+                        <label for="editDate">Date</label>
+                        <input id="editDate" name="date" type="date" required />
+                    </div>
+                    <div class="form-field">
+                        <label for="editTime">Time</label>
+                        <input id="editTime" name="time" type="time" required />
+                    </div>
+                    <div class="form-field">
+                        <label for="editSpeaker">Speaker</label>
+                        <input id="editSpeaker" name="speaker" type="text" placeholder="Speaker name" required />
+                    </div>
+                    <div class="form-field">
+                        <label for="editStatus">Status</label>
+                        <select id="editStatus" name="status" required>
+                            <option value="upcoming">Upcoming</option>
+                            <option value="completed">Completed</option>
+                        </select>
+                    </div>
+                    <div class="form-field">
+                        <label for="editAutomationFolder">Automation Folder (IND & UAE)</label>
+                        <input id="editAutomationFolder" name="automationFolder" type="text" placeholder="Folder path or link" />
+                    </div>
+                    <div class="form-field">
+                        <label for="editEmailTemplates">Email Templates (IND & UAE)</label>
+                        <input id="editEmailTemplates" name="emailTemplates" type="text" placeholder="Folder path or link" />
+                    </div>
+                    <div class="form-field">
+                        <label for="editWhatsappTemplate">WhatsApp Template in GHL (UAE)</label>
+                        <input id="editWhatsappTemplate" name="whatsappTemplate" type="text" placeholder="Template path or link" />
+                    </div>
+                    <div class="form-field">
+                        <label for="editSlackChannel">Slack Channel Link (IND & UAE)</label>
+                        <input id="editSlackChannel" name="slackChannel" type="url" placeholder="https://" />
+                    </div>
+                    <div class="form-field form-field-full">
+                        <label for="editGoogleSheet">Google Sheet Link (IND & UAE)</label>
+                        <input id="editGoogleSheet" name="googleSheet" type="url" placeholder="https://" />
+                    </div>
+                </div>
+
+                <div class="form-error hidden" id="editEventError" role="alert"></div>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" id="cancelEditModalBtn">Cancel</button>
+                    <button type="submit" class="btn btn-primary">
+                        <i class='bx bx-save'></i> Save Changes
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script src="event.js"></script>
+</body>
+</html>
+
